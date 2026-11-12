@@ -1,0 +1,67 @@
+package com.plazoleta.messaging.infrastructure.output.sms;
+
+import java.util.Map;
+
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
+
+import com.plazoleta.messaging.application.port.output.SmsSenderPort;
+import com.plazoleta.messaging.domain.exception.SmsDeliveryException;
+import com.plazoleta.messaging.domain.model.SmsMessage;
+
+/**
+ * Proveedor real: envía el SMS con la API de Twilio
+ * (POST /2010-04-01/Accounts/{sid}/Messages.json, autenticación básica con SID y token).
+ */
+public class TwilioSmsAdapter implements SmsSenderPort {
+    private final RestClient client;
+    private final String accountSid;
+    private final String fromNumber;
+
+    public TwilioSmsAdapter(String baseUrl, String accountSid, String authToken, String fromNumber) {
+        if (isBlank(accountSid) || isBlank(authToken) || isBlank(fromNumber)) {
+            throw new IllegalStateException(
+                    "SMS_PROVIDER=twilio needs TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER");
+        }
+        this.client = RestClient.builder().baseUrl(baseUrl)
+                .defaultHeaders(headers -> headers.setBasicAuth(accountSid, authToken)).build();
+        this.accountSid = accountSid;
+        this.fromNumber = fromNumber;
+    }
+
+    @Override
+    public String providerName() {
+        return "twilio";
+    }
+
+    @Override
+    public String send(SmsMessage message) {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        // Twilio exige el número en formato internacional, con + y código de país.
+        form.add("To", message.getPhone().startsWith("+") ? message.getPhone() : "+" + message.getPhone());
+        form.add("From", fromNumber);
+        form.add("Body", message.getText());
+        try {
+            Map<?, ?> response = client.post().uri("/2010-04-01/Accounts/{sid}/Messages.json", accountSid)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED).body(form)
+                    .retrieve().body(Map.class);
+            Object sid = response == null ? null : response.get("sid");
+            if (sid == null) {
+                throw new SmsDeliveryException("Twilio did not confirm the message");
+            }
+            return sid.toString();
+        } catch (RestClientResponseException ex) {
+            throw new SmsDeliveryException("Twilio rejected the message (HTTP " + ex.getStatusCode().value() + ")", ex);
+        } catch (RestClientException ex) {
+            throw new SmsDeliveryException("Twilio is unavailable", ex);
+        }
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+}
