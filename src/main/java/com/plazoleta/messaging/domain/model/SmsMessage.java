@@ -10,13 +10,13 @@ public class SmsMessage {
 
     public SmsMessage(String phone, String text) {
         if (phone == null || !phone.matches("^\\+?\\d{7,13}$")) {
-            throw new IllegalArgumentException("Phone must have 7 to 13 digits and may start with +");
+            throw new IllegalArgumentException("El teléfono debe tener de 7 a 13 dígitos y puede empezar con +");
         }
         if (text == null || text.isBlank()) {
-            throw new IllegalArgumentException("Message is required");
+            throw new IllegalArgumentException("El mensaje es obligatorio");
         }
         if (text.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("Message must have at most " + MAX_LENGTH + " characters");
+            throw new IllegalArgumentException("El mensaje puede tener máximo " + MAX_LENGTH + " caracteres");
         }
         this.phone = phone;
         this.text = text;

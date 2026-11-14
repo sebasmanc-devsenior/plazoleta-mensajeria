@@ -36,7 +36,7 @@ public class TwilioSmsAdapter implements SmsSenderPort {
                             Duration connectTimeout, Duration readTimeout) {
         if (isBlank(accountSid) || isBlank(authToken) || isBlank(fromNumber)) {
             throw new IllegalStateException(
-                    "SMS_PROVIDER=twilio needs TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER");
+                    "SMS_PROVIDER=twilio necesita TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN y TWILIO_FROM_NUMBER");
         }
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(connectTimeout);
@@ -65,13 +65,13 @@ public class TwilioSmsAdapter implements SmsSenderPort {
                     .retrieve().body(Map.class);
             Object sid = response == null ? null : response.get("sid");
             if (sid == null) {
-                throw new SmsDeliveryException("Twilio did not confirm the message");
+                throw new SmsDeliveryException("Twilio no confirmó el mensaje");
             }
             return sid.toString();
         } catch (RestClientResponseException ex) {
-            throw new SmsDeliveryException("Twilio rejected the message (HTTP " + ex.getStatusCode().value() + ")", ex);
+            throw new SmsDeliveryException("Twilio rechazó el mensaje (HTTP " + ex.getStatusCode().value() + ")", ex);
         } catch (RestClientException ex) {
-            throw new SmsDeliveryException("Twilio is unavailable", ex);
+            throw new SmsDeliveryException("Twilio no está disponible", ex);
         }
     }
 

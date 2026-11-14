@@ -30,7 +30,7 @@ public class BeanConfiguration {
         if ("simulated".equalsIgnoreCase(provider)) {
             return new SimulatedSmsAdapter();
         }
-        throw new IllegalStateException("SMS_PROVIDER must be 'simulated' or 'twilio'");
+        throw new IllegalStateException("SMS_PROVIDER debe ser 'simulated' o 'twilio'");
     }
 
     /** HU-14 */

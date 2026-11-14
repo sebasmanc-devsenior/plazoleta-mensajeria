@@ -41,7 +41,7 @@ public class InternalSmsController {
         if (internalToken == null || internalToken.isBlank()
                 || !MessageDigest.isEqual(internalToken.getBytes(StandardCharsets.UTF_8),
                         supplied.getBytes(StandardCharsets.UTF_8))) {
-            throw new InvalidServiceCredentialsException("Invalid service credentials");
+            throw new InvalidServiceCredentialsException("Credenciales de servicio inválidas");
         }
         return sendSmsUseCase.execute(command);
     }

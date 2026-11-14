@@ -16,7 +16,7 @@ public class SendSmsService implements SendSmsUseCase {
     @Override
     public SmsResponse execute(SendSmsCommand command) {
         if (command == null) {
-            throw new IllegalArgumentException("Request body is required");
+            throw new IllegalArgumentException("El cuerpo de la petición es obligatorio");
         }
         SmsMessage message = new SmsMessage(command.getPhone(), command.getMessage());
         String providerMessageId = smsSenderPort.send(message);
