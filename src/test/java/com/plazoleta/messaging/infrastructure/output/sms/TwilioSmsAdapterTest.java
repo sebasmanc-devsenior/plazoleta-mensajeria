@@ -88,4 +88,18 @@ class TwilioSmsAdapterTest {
         assertThatThrownBy(() -> new TwilioSmsAdapter("http://localhost:1", "", "secret", "+15005550006"))
                 .isInstanceOf(IllegalStateException.class);
     }
+
+    /** Si Twilio acepta la conexión pero nunca responde, el envío falla a tiempo en vez de quedarse esperando. */
+    @Test
+    void twilioHangingFailsInTime() throws java.io.IOException {
+        try (java.net.ServerSocket silent = new java.net.ServerSocket(0, 50, java.net.InetAddress.getLoopbackAddress())) {
+            TwilioSmsAdapter hanging = new TwilioSmsAdapter("http://127.0.0.1:" + silent.getLocalPort(), "AC123", "secret",
+                    "+15005550006", java.time.Duration.ofMillis(300), java.time.Duration.ofMillis(300));
+            long start = System.nanoTime();
+
+            assertThatThrownBy(() -> hanging.send(new SmsMessage("+573001112233", "hola")))
+                    .isInstanceOf(SmsDeliveryException.class);
+            assertThat(java.time.Duration.ofNanos(System.nanoTime() - start)).isLessThan(java.time.Duration.ofSeconds(3));
+        }
+    }
 }
