@@ -1,5 +1,7 @@
 package com.plazoleta.messaging.infrastructure.output.sms;
 
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import java.time.Duration;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
@@ -22,12 +24,24 @@ public class TwilioSmsAdapter implements SmsSenderPort {
     private final String accountSid;
     private final String fromNumber;
 
+    public static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(2);
+    public static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(10);
+
     public TwilioSmsAdapter(String baseUrl, String accountSid, String authToken, String fromNumber) {
+        this(baseUrl, accountSid, authToken, fromNumber, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT);
+    }
+
+    /** Con tiempo máximo para conectar y para que Twilio responda: si Twilio se cuelga, el envío falla (502) a tiempo. */
+    public TwilioSmsAdapter(String baseUrl, String accountSid, String authToken, String fromNumber,
+                            Duration connectTimeout, Duration readTimeout) {
         if (isBlank(accountSid) || isBlank(authToken) || isBlank(fromNumber)) {
             throw new IllegalStateException(
                     "SMS_PROVIDER=twilio needs TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER");
         }
-        this.client = RestClient.builder().baseUrl(baseUrl)
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(connectTimeout);
+        requestFactory.setReadTimeout(readTimeout);
+        this.client = RestClient.builder().baseUrl(baseUrl).requestFactory(requestFactory)
                 .defaultHeaders(headers -> headers.setBasicAuth(accountSid, authToken)).build();
         this.accountSid = accountSid;
         this.fromNumber = fromNumber;
