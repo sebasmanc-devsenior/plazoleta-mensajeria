@@ -1,5 +1,6 @@
 package com.plazoleta.messaging.infrastructure.configuration;
 
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,11 @@ public class BeanConfiguration {
                                        @Value("${app.sms.twilio.base-url}") String twilioBaseUrl,
                                        @Value("${app.sms.twilio.account-sid}") String accountSid,
                                        @Value("${app.sms.twilio.auth-token}") String authToken,
-                                       @Value("${app.sms.twilio.from-number}") String fromNumber) {
+                                       @Value("${app.sms.twilio.from-number}") String fromNumber,
+                                       @Value("${app.sms.twilio.connect-timeout:2s}") Duration connectTimeout,
+                                       @Value("${app.sms.twilio.read-timeout:10s}") Duration readTimeout) {
         if ("twilio".equalsIgnoreCase(provider)) {
-            return new TwilioSmsAdapter(twilioBaseUrl, accountSid, authToken, fromNumber);
+            return new TwilioSmsAdapter(twilioBaseUrl, accountSid, authToken, fromNumber, connectTimeout, readTimeout);
         }
         if ("simulated".equalsIgnoreCase(provider)) {
             return new SimulatedSmsAdapter();
