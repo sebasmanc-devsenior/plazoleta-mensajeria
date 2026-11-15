@@ -78,3 +78,14 @@ com.plazoleta.messaging
 ```
 
 Las pruebas no envían SMS reales: usan el proveedor simulado y un servidor de prueba que hace de Twilio.
+
+## Cobertura de pruebas (JaCoCo)
+
+Al correr las pruebas se genera el reporte de cobertura:
+
+```powershell
+.\mvnw.cmd test
+```
+
+El reporte queda en `target/site/jacoco/index.html` (ábrelo en el navegador). Muestra qué porcentaje de
+instrucciones y de ramas del código ejecutan las pruebas, por paquete y por clase.
