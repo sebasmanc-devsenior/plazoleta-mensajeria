@@ -49,15 +49,20 @@ com.plazoleta.messaging
 │   ├── model        SmsMessage (valida teléfono y texto)
 │   └── exception    SmsDeliveryException
 ├── application
+│   ├── handler      ISmsHandler (+ SmsHandler)
 │   ├── port/input   SendSmsUseCase
 │   ├── port/output  SmsSenderPort
 │   ├── service      SendSmsService
 │   └── dto          SendSmsCommand, SmsResponse
 └── infrastructure
-    ├── input/rest   InternalSmsController, exceptionhandler
+    ├── input/rest   InternalSmsController, dto (SendSmsRequest), mapper, exceptionhandler
     ├── output/sms   SimulatedSmsAdapter, TwilioSmsAdapter
     └── configuration BeanConfiguration (elige el proveedor)
 ```
+
+Flujo de cada petición: `Controller` (solo HTTP: token interno, request DTO y mapper a comando) →
+`IXHandler` (aplicación: coordina y delega, sin reglas de negocio) → interfaz del caso de uso (`port/input`) →
+`Service` (toda la lógica) → puertos de salida → adaptadores.
 
 ## Cómo ejecutarlo
 
