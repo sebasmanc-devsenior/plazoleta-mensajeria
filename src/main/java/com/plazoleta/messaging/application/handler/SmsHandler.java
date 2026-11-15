@@ -2,13 +2,13 @@ package com.plazoleta.messaging.application.handler;
 
 import com.plazoleta.messaging.application.dto.SendSmsCommand;
 import com.plazoleta.messaging.application.dto.SmsResponse;
-import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
+import com.plazoleta.messaging.application.port.input.SendSmsPort;
 
 /** Delega en el caso de uso HU-14. Se registra como @Bean en BeanConfiguration (sin Spring aquí). */
 public class SmsHandler implements ISmsHandler {
-    private final SendSmsUseCase sendSmsUseCase;
+    private final SendSmsPort sendSmsUseCase;
 
-    public SmsHandler(SendSmsUseCase sendSmsUseCase) {
+    public SmsHandler(SendSmsPort sendSmsUseCase) {
         this.sendSmsUseCase = sendSmsUseCase;
     }
 

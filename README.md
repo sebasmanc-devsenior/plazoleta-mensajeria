@@ -50,9 +50,9 @@ com.plazoleta.messaging
 │   └── exception    SmsDeliveryException
 ├── application
 │   ├── handler      ISmsHandler (+ SmsHandler)
-│   ├── port/input   SendSmsUseCase
+│   ├── port/input   puertos de entrada (interfaces): SendSmsPort
 │   ├── port/output  SmsSenderPort
-│   ├── service      SendSmsService
+│   ├── usecase      casos de uso, clases concretas con toda la lógica: SendSmsUseCase
 │   └── dto          SendSmsCommand, SmsResponse
 └── infrastructure
     ├── input/rest   InternalSmsController, dto (SendSmsRequest), mapper, exceptionhandler
@@ -61,8 +61,8 @@ com.plazoleta.messaging
 ```
 
 Flujo de cada petición: `Controller` (solo HTTP: token interno, request DTO y mapper a comando) →
-`IXHandler` (aplicación: coordina y delega, sin reglas de negocio) → interfaz del caso de uso (`port/input`) →
-`Service` (toda la lógica) → puertos de salida → adaptadores.
+`IXHandler` (aplicación: coordina y delega, sin reglas de negocio) → puerto de entrada (`port/input`, interfaz) →
+caso de uso (`usecase`, clase concreta con toda la lógica) → puertos de salida → adaptadores.
 
 ## Cómo ejecutarlo
 
