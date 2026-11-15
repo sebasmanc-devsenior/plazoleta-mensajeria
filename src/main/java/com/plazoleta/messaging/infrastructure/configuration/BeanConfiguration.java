@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.plazoleta.messaging.application.handler.ISmsHandler;
+import com.plazoleta.messaging.application.handler.SmsHandler;
 import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
 import com.plazoleta.messaging.application.port.output.SmsSenderPort;
 import com.plazoleta.messaging.application.service.SendSmsService;
@@ -39,5 +41,11 @@ public class BeanConfiguration {
     @Bean
     public SendSmsUseCase sendSmsUseCase(SmsSenderPort smsSenderPort) {
         return new SendSmsService(smsSenderPort);
+    }
+
+    /** Handler que usa el controlador: delega en el caso de uso. */
+    @Bean
+    public ISmsHandler smsHandler(SendSmsUseCase sendSmsUseCase) {
+        return new SmsHandler(sendSmsUseCase);
     }
 }
