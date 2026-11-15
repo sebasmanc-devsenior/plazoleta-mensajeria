@@ -1,17 +1,17 @@
-package com.plazoleta.messaging.application.service;
+package com.plazoleta.messaging.application.usecase;
 
 import com.plazoleta.messaging.domain.util.MensajesError;
 
 import com.plazoleta.messaging.application.dto.SendSmsCommand;
 import com.plazoleta.messaging.application.dto.SmsResponse;
-import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
+import com.plazoleta.messaging.application.port.input.SendSmsPort;
 import com.plazoleta.messaging.application.port.output.SmsSenderPort;
 import com.plazoleta.messaging.domain.model.SmsMessage;
 
-public class SendSmsService implements SendSmsUseCase {
+public class SendSmsUseCase implements SendSmsPort {
     private final SmsSenderPort smsSenderPort;
 
-    public SendSmsService(SmsSenderPort smsSenderPort) {
+    public SendSmsUseCase(SmsSenderPort smsSenderPort) {
         this.smsSenderPort = smsSenderPort;
     }
 

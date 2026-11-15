@@ -1,4 +1,4 @@
-package com.plazoleta.messaging.application.service;
+package com.plazoleta.messaging.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -25,11 +25,11 @@ import com.plazoleta.messaging.domain.model.SmsMessage;
 
 /** HU-14: enviar un SMS. */
 @ExtendWith(MockitoExtension.class)
-class SendSmsServiceTest {
+class SendSmsUseCaseTest {
     @Mock
     private SmsSenderPort smsSenderPort;
     @InjectMocks
-    private SendSmsService service;
+    private SendSmsUseCase service;
 
     @Test
     void sendsTheMessageToThePhoneThroughTheProvider() {

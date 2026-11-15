@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 import com.plazoleta.messaging.application.handler.ISmsHandler;
 import com.plazoleta.messaging.application.handler.SmsHandler;
-import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
+import com.plazoleta.messaging.application.port.input.SendSmsPort;
 import com.plazoleta.messaging.application.port.output.SmsSenderPort;
-import com.plazoleta.messaging.application.service.SendSmsService;
+import com.plazoleta.messaging.application.usecase.SendSmsUseCase;
 import com.plazoleta.messaging.infrastructure.output.sms.SimulatedSmsAdapter;
 import com.plazoleta.messaging.infrastructure.output.sms.TwilioSmsAdapter;
 
@@ -39,13 +39,13 @@ public class BeanConfiguration {
 
     /** HU-14 */
     @Bean
-    public SendSmsUseCase sendSmsUseCase(SmsSenderPort smsSenderPort) {
-        return new SendSmsService(smsSenderPort);
+    public SendSmsPort sendSmsUseCase(SmsSenderPort smsSenderPort) {
+        return new SendSmsUseCase(smsSenderPort);
     }
 
     /** Handler que usa el controlador: delega en el caso de uso. */
     @Bean
-    public ISmsHandler smsHandler(SendSmsUseCase sendSmsUseCase) {
+    public ISmsHandler smsHandler(SendSmsPort sendSmsUseCase) {
         return new SmsHandler(sendSmsUseCase);
     }
 }
