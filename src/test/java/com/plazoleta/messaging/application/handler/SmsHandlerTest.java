@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import com.plazoleta.messaging.application.dto.SendSmsCommand;
 import com.plazoleta.messaging.application.dto.SmsResponse;
-import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
+import com.plazoleta.messaging.application.port.input.SendSmsPort;
 
 /** El handler no decide nada: pasa el comando al caso de uso y devuelve su respuesta. */
 class SmsHandlerTest {
-    private final SendSmsUseCase sendSmsUseCase = mock(SendSmsUseCase.class);
+    private final SendSmsPort sendSmsUseCase = mock(SendSmsPort.class);
     private final SmsHandler handler = new SmsHandler(sendSmsUseCase);
 
     @Test
