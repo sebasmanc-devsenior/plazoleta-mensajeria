@@ -16,6 +16,9 @@ public final class MensajesError {
     public static final String TWILIO_NO_CONFIRMO_EL_MENSAJE = "Twilio no confirmó el mensaje";
     public static final String TWILIO_NO_ESTA_DISPONIBLE = "Twilio no está disponible";
     public static final String TWILIO_RECHAZO_EL_MENSAJE_HTTP = "Twilio rechazó el mensaje (HTTP ";
+    public static final String ERROR_INTERNO_DEL_SERVIDOR = "Error interno del servidor";
+    public static final String RUTA_NO_EXISTE = "La ruta solicitada no existe";
+    public static final String PETICION_NO_SOPORTADA = "La petición no se puede procesar con ese método o formato";
 
     private MensajesError() {
     }
