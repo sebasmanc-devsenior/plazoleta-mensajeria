@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleMalformed(HttpMessageNotReadableException ex, HttpServletRequest request) {
-        return build(HttpStatus.BAD_REQUEST, "Request is malformed", request);
+        return build(HttpStatus.BAD_REQUEST, "La petición está mal formada", request);
     }
 
     @ExceptionHandler(InvalidServiceCredentialsException.class)

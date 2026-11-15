@@ -80,7 +80,7 @@ class SendSmsServiceTest {
 
     @Test
     void letsTheProviderFailureReachTheCaller() {
-        when(smsSenderPort.send(any())).thenThrow(new SmsDeliveryException("Twilio is unavailable"));
+        when(smsSenderPort.send(any())).thenThrow(new SmsDeliveryException("Twilio no está disponible"));
 
         assertThatThrownBy(() -> service.execute(new SendSmsCommand("+573001112233", "hola")))
                 .isInstanceOf(SmsDeliveryException.class);
