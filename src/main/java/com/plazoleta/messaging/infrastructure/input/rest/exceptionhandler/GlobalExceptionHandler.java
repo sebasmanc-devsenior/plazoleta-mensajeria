@@ -1,5 +1,7 @@
 package com.plazoleta.messaging.infrastructure.input.rest.exceptionhandler;
 
+import com.plazoleta.messaging.domain.util.MensajesError;
+
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleMalformed(HttpMessageNotReadableException ex, HttpServletRequest request) {
-        return build(HttpStatus.BAD_REQUEST, "La petición está mal formada", request);
+        return build(HttpStatus.BAD_REQUEST, MensajesError.PETICION_ESTA_MAL_FORMADA, request);
     }
 
     @ExceptionHandler(InvalidServiceCredentialsException.class)

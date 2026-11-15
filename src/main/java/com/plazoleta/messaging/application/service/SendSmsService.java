@@ -1,5 +1,7 @@
 package com.plazoleta.messaging.application.service;
 
+import com.plazoleta.messaging.domain.util.MensajesError;
+
 import com.plazoleta.messaging.application.dto.SendSmsCommand;
 import com.plazoleta.messaging.application.dto.SmsResponse;
 import com.plazoleta.messaging.application.port.input.SendSmsUseCase;
@@ -16,7 +18,7 @@ public class SendSmsService implements SendSmsUseCase {
     @Override
     public SmsResponse execute(SendSmsCommand command) {
         if (command == null) {
-            throw new IllegalArgumentException("El cuerpo de la petición es obligatorio");
+            throw new IllegalArgumentException(MensajesError.CUERPO_DE_LA_PETICION_ES_OBLIGATORIO);
         }
         SmsMessage message = new SmsMessage(command.getPhone(), command.getMessage());
         String providerMessageId = smsSenderPort.send(message);

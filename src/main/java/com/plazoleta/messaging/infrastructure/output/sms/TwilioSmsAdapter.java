@@ -1,5 +1,7 @@
 package com.plazoleta.messaging.infrastructure.output.sms;
 
+import com.plazoleta.messaging.domain.util.MensajesError;
+
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import java.time.Duration;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class TwilioSmsAdapter implements SmsSenderPort {
                             Duration connectTimeout, Duration readTimeout) {
         if (isBlank(accountSid) || isBlank(authToken) || isBlank(fromNumber)) {
             throw new IllegalStateException(
-                    "SMS_PROVIDER=twilio necesita TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN y TWILIO_FROM_NUMBER");
+                    MensajesError.SMS_PROVIDER_TWILIO_NECESITA_TWILIO_ACCOUNT_SID);
         }
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(connectTimeout);
@@ -65,13 +67,13 @@ public class TwilioSmsAdapter implements SmsSenderPort {
                     .retrieve().body(Map.class);
             Object sid = response == null ? null : response.get("sid");
             if (sid == null) {
-                throw new SmsDeliveryException("Twilio no confirmó el mensaje");
+                throw new SmsDeliveryException(MensajesError.TWILIO_NO_CONFIRMO_EL_MENSAJE);
             }
             return sid.toString();
         } catch (RestClientResponseException ex) {
-            throw new SmsDeliveryException("Twilio rechazó el mensaje (HTTP " + ex.getStatusCode().value() + ")", ex);
+            throw new SmsDeliveryException(MensajesError.TWILIO_RECHAZO_EL_MENSAJE_HTTP + ex.getStatusCode().value() + ")", ex);
         } catch (RestClientException ex) {
-            throw new SmsDeliveryException("Twilio no está disponible", ex);
+            throw new SmsDeliveryException(MensajesError.TWILIO_NO_ESTA_DISPONIBLE, ex);
         }
     }
 
