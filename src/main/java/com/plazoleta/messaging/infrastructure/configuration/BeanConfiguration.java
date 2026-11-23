@@ -14,22 +14,29 @@ import com.plazoleta.messaging.application.port.output.SmsSenderPort;
 import com.plazoleta.messaging.application.usecase.SendSmsUseCase;
 import com.plazoleta.messaging.infrastructure.output.sms.SimulatedSmsAdapter;
 import com.plazoleta.messaging.infrastructure.output.sms.TwilioSmsAdapter;
+import com.plazoleta.messaging.infrastructure.output.sms.TwilioTemplateSmsAdapter;
 
 /** Conecta los casos de uso con sus adaptadores. Aquí se elige el proveedor de SMS. */
 @Configuration
 public class BeanConfiguration {
 
-    /** HU-14: el adaptador de salida depende de SMS_PROVIDER (simulated o twilio). */
+    /** HU-14: el adaptador de salida depende de SMS_PROVIDER (simulated, twilio o twilio-plantilla). */
     @Bean
     public SmsSenderPort smsSenderPort(@Value("${app.sms.provider}") String provider,
                                        @Value("${app.sms.twilio.base-url}") String twilioBaseUrl,
                                        @Value("${app.sms.twilio.account-sid}") String accountSid,
                                        @Value("${app.sms.twilio.auth-token}") String authToken,
                                        @Value("${app.sms.twilio.from-number}") String fromNumber,
+                                       @Value("${app.sms.twilio.template:sms_2fa}") String template,
                                        @Value("${app.sms.twilio.connect-timeout:2s}") Duration connectTimeout,
                                        @Value("${app.sms.twilio.read-timeout:10s}") Duration readTimeout) {
         if ("twilio".equalsIgnoreCase(provider)) {
             return new TwilioSmsAdapter(twilioBaseUrl, accountSid, authToken, fromNumber, connectTimeout, readTimeout);
+        }
+        if ("twilio-plantilla".equalsIgnoreCase(provider)) {
+            return new TwilioTemplateSmsAdapter(
+                    new TwilioSmsAdapter(twilioBaseUrl, accountSid, authToken, fromNumber, connectTimeout, readTimeout),
+                    template);
         }
         if ("simulated".equalsIgnoreCase(provider)) {
             return new SimulatedSmsAdapter();
