@@ -21,11 +21,18 @@ El proveedor se elige con la variable `SMS_PROVIDER`:
 | --- | --- | --- |
 | `simulated` (por defecto) | Escribe el SMS en la consola del microservicio | Nada |
 | `twilio` | Envía el SMS de verdad con Twilio | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` |
+| `twilio-plantilla` | Para cuentas **Trial** de Twilio, que solo envían plantillas: envía al celular la plantilla `TWILIO_TEMPLATE` (por defecto `sms_2fa`) y escribe en la consola el mensaje real con el PIN | Lo mismo que `twilio` |
 
 Con `simulated`, cada mensaje aparece en la consola así:
 
 ```
 [SMS SIMULADO] id=SIM-... para=+573001112233 mensaje="Plazoleta: tu pedido #5 está listo. PIN para reclamarlo: 048213"
+```
+
+Con `twilio-plantilla`, al celular llega la plantilla de Twilio y en la consola queda el PIN verdadero:
+
+```
+[SMS TWILIO PLANTILLA] id=SM... para=+573001112233 plantilla enviada al celular="sms_2fa" mensaje real="Plazoleta: tu pedido #5 está listo. PIN para reclamarlo: 048213"
 ```
 
 ## Endpoint
@@ -56,7 +63,7 @@ com.plazoleta.messaging
 │   └── dto          SendSmsCommand, SmsResponse
 └── infrastructure
     ├── input/rest   InternalSmsController, dto (SendSmsRequest), mapper, exceptionhandler
-    ├── output/sms   SimulatedSmsAdapter, TwilioSmsAdapter
+    ├── output/sms   SimulatedSmsAdapter, TwilioSmsAdapter, TwilioTemplateSmsAdapter
     └── configuration BeanConfiguration (elige el proveedor)
 ```
 
